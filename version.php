@@ -30,5 +30,5 @@ $plugin->version = 2023071400;
 $plugin->requires = 2022041900;
 $plugin->maturity = MATURITY_BETA;
 $plugin->dependencies = [
-    'local_accessibility' => 2023071300
+    'local_accessibility' => 2023071300,
 ];

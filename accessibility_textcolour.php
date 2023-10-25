@@ -24,7 +24,7 @@
 
 namespace local_accessibility\widgets;
 
-defined('MOODLE_INTERNAL') or die();
+defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../classes/colourwidget.php');
 
@@ -37,10 +37,8 @@ class textcolour extends colourwidget {
     }
 
     public function init() {
-        /**
-         * @var \moodle_page $PAGE
-         */
         global $PAGE;
+        /** @var \moodle_page $PAGE */ $PAGE;
 
         $userconfig = $this->getuserconfig();
         if ($userconfig) {
@@ -52,7 +50,7 @@ class textcolour extends colourwidget {
             $this->getfullname(),
             $this->name,
             'color',
-            'accessibility-textcolour'
+            'accessibility-textcolour',
         ]);
     }
 }
