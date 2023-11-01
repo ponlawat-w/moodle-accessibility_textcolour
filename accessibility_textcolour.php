@@ -32,10 +32,19 @@ require_once(__DIR__ . '/../../classes/colourwidget.php');
  * Text colour accessibility widget definition
  */
 class textcolour extends colourwidget {
+
+    /**
+     * Constructor
+     */
     public function __construct() {
         parent::__construct(get_string('pluginname', 'accessibility_textcolour'), 'textcolour');
     }
 
+    /**
+     * Initialisation
+     *
+     * @return void
+     */
     public function init() {
         global $PAGE;
         /** @var \moodle_page $PAGE */ $PAGE;
