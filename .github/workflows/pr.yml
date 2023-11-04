@@ -1,0 +1,21 @@
+name: Pull Request Check
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+jobs:
+  ci:
+    name: CI
+    uses: ponlawat-w/moodle-local_accessibility/.github/workflows/ci.yml@master
+    with:
+      widget-textcolour-branch: ${{ github.ref }}
+  ci-finished:
+    name: CI Finished
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 0

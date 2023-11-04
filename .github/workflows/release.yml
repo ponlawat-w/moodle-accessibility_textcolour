@@ -1,4 +1,4 @@
-name: Moodle Accessibility Text Colour Widget Releasing
+name: Release
 
 on:
   push:
@@ -7,50 +7,45 @@ on:
 
 jobs:
 
+  ci:
+    name: CI
+    uses: ponlawat-w/moodle-local_accessibility/.github/workflows/ci.yml@master
+    with:
+      widget-textcolour-branch: ${{ github.ref }}
+
+  get-version:
+    name: Get version info
+    uses: ponlawat-w/moodle-local_accessibility/.github/workflows/get-version.yml@master
+    with:
+      ref: ${{ github.ref }}
+
   release:
     name: Release
-
+    needs: [ci, get-version]
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.0
-          extensions:
-          ini-values: max_input_vars=5000
-          coverage: none
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      - name: Get Plugin Information
-        id: plugin-info
-        run: php -r 'define("MOODLE_INTERNAL",1);define("MATURITY_ALPHA",50);define("MATURITY_BETA",100);define("MATURITY_RC",150);define("MATURITY_STABLE",200);define("ANY_VERSION","any");$plugin=new stdClass();include_once("version.php");$plugin->maturity!=200&&throw new Exception("Requires plugin maturity to be stable to release!");echo "PLUGIN_COMPONENT=".(isset($plugin->component)?$plugin->component:"")."\nPLUGIN_RELEASE=".(isset($plugin->release)?$plugin->release:"")."\nPLUGIN_VERSION=".(isset($plugin->version)?$plugin->version:"")."\nPLUGIN_REQUIRES=".(isset($plugin->requires)?$plugin->requires:"")."\nPLUGIN_MATURITY=".(isset($plugin->maturity)?$plugin->maturity:"")."\nPLUGIN_DEPENDENCIES=".(isset($plugin->dependencies)?json_encode($plugin->dependencies):"{}");' >> $GITHUB_OUTPUT
-
-      - name: Get Branch Name
-        id: get-branch
-        run: php -r 'echo "BRANCH_NAME=".preg_replace("/(\\(|\\))/", "", strtolower(str_replace(" ", "-", preg_replace("/(\\d+)\\.(\\d+)\\.(\\d+)(.*)/","v$1.$2$4", "${{ steps.plugin-info.outputs.PLUGIN_RELEASE }}"))));'  >> $GITHUB_OUTPUT
-
       - name: Push to Branch
         run: |
-          git checkout -b ${{ steps.get-branch.outputs.BRANCH_NAME }}
-          git push -f -u origin ${{ steps.get-branch.outputs.BRANCH_NAME }}
+          git checkout -b ${{ needs.get-version.outputs.branch-name }}
+          git push -f -u origin ${{ needs.get-version.outputs.branch-name }}
 
-      - name: Tag
-        id: tag
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ github.token }}
-          custom_tag: ${{ steps.plugin-info.outputs.PLUGIN_RELEASE }}
-          release_branches: ${{ github.ref_name }}
+      - name: Publish Tag
+        run: |
+          git config --global user.name "ponlawat-w"
+          git config --global user.email "ponlawat_w@outlook.co.th"
+          git tag -fa v${{ needs.get-version.outputs.plugin-release }} -m "${{ needs.get-version.outputs.plugin-release }} - ${{ needs.get-version.outputs.plugin-version }}"
+          git push --force origin v${{ needs.get-version.outputs.plugin-release }}
 
-      - name: Relase
+      - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.new_tag }}
-          name: ${{ steps.plugin-info.outputs.PLUGIN_RELEASE }}
-          body: ${{ steps.plugin-info.outputs.PLUGIN_RELEASE }} - ${{ steps.plugin-info.outputs.PLUGIN_VERSION }}
+          tag_name: v${{ needs.get-version.outputs.plugin-release }}
+          name: v${{ needs.get-version.outputs.plugin-release }}
+          body: ${{ needs.get-version.outputs.plugin-release }} - ${{ needs.get-version.outputs.plugin-version }}
