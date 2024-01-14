@@ -35,4 +35,4 @@ if (!$userconfig) {
     exit;
 }
 
-echo "body.accessibility-textcolour, body.accessibility-textcolour * { color: {$userconfig}; }";
+echo "body.accessibility-textcolour, body.accessibility-textcolour * { color: {$userconfig} !important; }";
