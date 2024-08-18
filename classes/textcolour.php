@@ -61,6 +61,11 @@ class textcolour extends colourwidget implements apply_style {
         ]);
     }
 
+    /**
+     * Apply own css styles, will be served to all users when plugin is enabled.
+     *
+     * @return string
+     */
     public function apply_style(): string {
         $userconfig = $this->getuserconfig();
         if (!$userconfig) {
