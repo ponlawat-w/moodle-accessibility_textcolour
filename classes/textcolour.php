@@ -74,6 +74,6 @@ class textcolour extends colourwidget implements apply_style {
         // Strip all special characters except # because its needed for hex colors.
         // A check for #XX.. could have been used but this would not allow named css colors such as red, or green.
         $color = preg_replace("/[^A-Za-z0-9#]/", '', $userconfig);
-        return "body.accessibility-textcolour, body.accessibility-textcolour * { color: {$color}; }";
+        return "body.accessibility-textcolour, body.accessibility-textcolour * { color: {$color} !important; }";
     }
 }
