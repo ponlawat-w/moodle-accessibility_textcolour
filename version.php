@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'accessibility_textcolour';
-$plugin->release = '1.0.1';
-$plugin->version = 2024051300;
+$plugin->release = '2.0.0';
+$plugin->version = 2024082401;
 $plugin->requires = 2022041900;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
-    'local_accessibility' => 2024050800,
+    'local_accessibility' => 2024082401,
 ];
