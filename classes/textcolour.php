@@ -31,7 +31,6 @@ use local_accessibility\widgets\colourwidget;
  * Text colour accessibility widget definition
  */
 class textcolour extends colourwidget implements apply_style {
-
     /**
      * Constructor
      */
